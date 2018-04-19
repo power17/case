@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<div id="box"></div>
+<body>
+<script>
+    var box = document.getElementById('box');
+    var str;
+
+
+    for (var i = 1; i <70 ; i++) {
+        if(i<10){var str="//image.giccoo.com/projects/your_own_way/img/walk1/walk000"+i+".png"}else{var str="//image.giccoo.com/projects/your_own_way/img/walk1/walk00"+i+".png"}
+        var img = new Image();
+        img.src=str;
+        box.appendChild(img);
+    };
+</script>
+</body>
+</html>
