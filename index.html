@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>我们终将成为独一无二的自己</title>
+    <script src="./js/createjs.js"></script>
+    <script src="./js/jquery.js"></script>
+    <script src="./js/share.js"></script>
+    <script src="./js/ithinky.js"></script>
+
+
+    <script src="./js/H5.js"></script>
+    <link rel="stylesheet" type="text/css" href="./cssimg/index.css">
+    
+    <script>
+
+        !function(a){var b=/iPhone/i,c=/iPod/i,d=/iPad/i,e=/(?=.*\bAndroid\b)(?=.*\bMobile\b)/i,f=/Android/i,g=/(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i,h=/(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i,i=/IEMobile/i,j=/(?=.*\bWindows\b)(?=.*\bARM\b)/i,k=/BlackBerry/i,l=/BB10/i,m=/Opera Mini/i,n=/(CriOS|Chrome)(?=.*\bMobile\b)/i,o=/(?=.*\bFirefox\b)(?=.*\bMobile\b)/i,p=new RegExp("(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)","i"),q=function(a,b){return a.test(b)},r=function(a){var r=a||navigator.userAgent,s=r.split("[FBAN");return"undefined"!=typeof s[1]&&(r=s[0]),s=r.split("Twitter"),"undefined"!=typeof s[1]&&(r=s[0]),this.apple={phone:q(b,r),ipod:q(c,r),tablet:!q(b,r)&&q(d,r),device:q(b,r)||q(c,r)||q(d,r)},this.amazon={phone:q(g,r),tablet:!q(g,r)&&q(h,r),device:q(g,r)||q(h,r)},this.android={phone:q(g,r)||q(e,r),tablet:!q(g,r)&&!q(e,r)&&(q(h,r)||q(f,r)),device:q(g,r)||q(h,r)||q(e,r)||q(f,r)},this.windows={phone:q(i,r),tablet:q(j,r),device:q(i,r)||q(j,r)},this.other={blackberry:q(k,r),blackberry10:q(l,r),opera:q(m,r),firefox:q(o,r),chrome:q(n,r),device:q(k,r)||q(l,r)||q(m,r)||q(o,r)||q(n,r)},this.seven_inch=q(p,r),this.any=this.apple.device||this.android.device||this.windows.device||this.other.device||this.seven_inch,this.phone=this.apple.phone||this.android.phone||this.windows.phone,this.tablet=this.apple.tablet||this.android.tablet||this.windows.tablet,"undefined"==typeof window?this:void 0},s=function(){var a=new r;return a.Class=r,a};"undefined"!=typeof module&&module.exports&&"undefined"==typeof window?module.exports=r:"undefined"!=typeof module&&module.exports&&"undefined"!=typeof window?module.exports=s():"function"==typeof define&&define.amd?define("isMobile",[],a.isMobile=s()):a.isMobile=s()}(this);
+        
+        var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+        
+        function init() {
+
+            canvas = document.getElementById("canvas");
+
+            autoScreen(750, 1256, canvas);
+            
+            images = images||{};
+            ss = ss||{};
+            var loader = new createjs.LoadQueue(false);
+            loader.installPlugin(createjs.Sound);
+            loader.addEventListener("fileload", handleFileLoad);
+            loader.addEventListener("progress", handleProgress);
+            loader.addEventListener("complete", handleComplete);
+            loader.loadManifest(lib.properties.manifest);
+
+            loader.loadFile({src:"sounds/bg.mp3", id:"bg"});
+        }
+
+        function handleProgress(evt) {
+            //document.getElementById("laodingtext").innerHTML ='Loading '+ Math.floor(evt.loaded * 100) + '%';
+            //$('.pgtrack').width(Math.floor(evt.loaded * 100)+"%");
+            $('#loadtxt').html(Math.floor(evt.loaded * 100)+"%");
+        }
+        function handleFileLoad(evt) {
+            if (evt.item.type == "image") { images[evt.item.id] = evt.result; }
+        }
+
+        function handleComplete(evt) {
+            $("#pgbar").fadeOut();          
+
+
+            createjs.Sound.registerSounds({
+                src: "sounds/bg.mp3",
+                id: "bg"
+            });
+
+            playSound('bg',-1);
+
+            var queue = evt.target;
+            var ssMetadata = lib.ssMetadata;
+            for(i=0; i<ssMetadata.length; i++) {
+                ss[ssMetadata[i].name] = new createjs.SpriteSheet( {"images": [queue.getResult(ssMetadata[i].name)], "frames": ssMetadata[i].frames} )
+            }
+
+            canvas.style.display = 'block';
+            exportRoot = new lib.独一无二();   //新版只需要改这地方
+            stage = new createjs.Stage(canvas);
+            stage.addChild(exportRoot);
+            stage.enableMouseOver();
+            createjs.Touch.enable(stage);
+        //Registers the "tick" event listener.
+        fnStartAnimation = function() {
+            createjs.Ticker.setFPS(lib.properties.fps);
+            createjs.Ticker.addEventListener("tick", stage);
+        }
+        //Code to support hidpi screens and responsive scaling.
+        
+        fnStartAnimation();
+
+        
+    }
+    function playSound(id, loop) {
+        createjs.Sound.play(id, createjs.Sound.INTERRUPT_EARLY, 0, 0, loop);
+    }
+
+    
+    
+    
+
+
+
+</script>
+</head>
+<body>
+    
+    <canvas id="canvas" width="750" height="1250" style="position: absolute; background-color:rgba(0, 0, 0, 1.00);"></canvas>
+        
+    
+    <div id="pgbar">
+        <img src="./cssimg/loading.gif" class="gif">
+        <span id="loadtxt">0%</span>
+    </div>
+
+    <div class="alertbg">
+        <div class="myalert">
+            <span></span>
+            <div class="alertbtn"><hr />确定</div>
+        </div>
+    </div>
+
+    <!-- <div id="info" style="color:#fff;position: absolute;top: 0;left: 0;width: 100%; height: 20px;"></div> -->
+</body>
+<script>
+    init();
+
+    window.alert=function(msg){
+        $('.alertbg').fadeIn('400');
+        $('.myalert span').html(msg);
+    }
+    $('.alertbtn').click(function(event) {
+        $('.alertbg').fadeOut('400');
+    });
+
+$(function(){
+    window.addEventListener("touchmove", function(event){       
+         event.preventDefault();   
+    }, false);
+});
+</script>
+<!-- 百度统计 -->
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?0d2ad2bf97c9e04b1b5b755433ed7e2f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+<!-- 百度统计 end -->
+</html>
